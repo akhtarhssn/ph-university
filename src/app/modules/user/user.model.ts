@@ -8,14 +8,19 @@ const UserSchema = new Schema<IUser>(
       required: true,
     },
     password: { type: String, required: true },
-    needPasswordChange: { type: Boolean, required: true },
+    needPasswordChange: { type: Boolean, required: true, default: true },
     role: {
       type: String,
       enum: ['Admin', 'Faculty', 'Student'],
       required: true,
     },
-    status: { type: String, enum: ['Active', 'Blocked'], required: true },
-    isDeleted: { type: Boolean, required: true },
+    status: {
+      type: String,
+      enum: ['Active', 'Blocked'],
+      default: 'Active',
+      required: true,
+    },
+    isDeleted: { type: Boolean, required: true, default: false },
   },
   {
     timestamps: true,
