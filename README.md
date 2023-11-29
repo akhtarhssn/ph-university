@@ -18,7 +18,7 @@ PH University is a comprehensive online class management system designed to stre
 To get started with PH University, follow the installation instructions in the project's README. Ensure you have Node.js, npm, and MongoDB installed.
 Feel free to contribute, report issues, or suggest enhancements to make PH University an even more powerful tool for online education!
 
-### Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -26,7 +26,7 @@ Before you begin, ensure you have the following installed:
 - [npm](https://www.npmjs.com/) (comes with Node.js)
 - [MongoDB](https://www.mongodb.com/) (optional, if your project uses MongoDB)
 
-### Installation
+## Installation
 
 1. Clone the repository:
 
@@ -46,7 +46,7 @@ cd ph-university
  npm install
 ```
 
-### Scripts
+## Scripts
 
 `npm start:prod`
 
@@ -95,7 +95,7 @@ Formats code using Prettier based on the configuration in .prettierrc file.
 npm run prettier
 ```
 
-### Linting and Formatting
+## Linting and Formatting
 
 Linting is performed using ESLint, and code formatting is done with Prettier. To lint the project:
 
@@ -115,7 +115,7 @@ To format code using Prettier:
 npm run prettier
 ```
 
-### Dependencies
+## Dependencies
 
 - bcrypt
 - cors
@@ -124,7 +124,7 @@ npm run prettier
 - mongoose
 - zod
 
-### Dev Dependencies
+## Dev Dependencies
 
 - @types/bcrypt
 - @types/cors
