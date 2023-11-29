@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
+// import studentZodSchema from '../student/student.validation';
 import { UserServices } from './user.services';
-import { UserValidation } from './user.validation';
 
-const createUser = async (req: Request, res: Response) => {
+const createStudent = async (req: Request, res: Response) => {
   try {
-    const { userData: userData } = req.body;
+    const { password, student: studentData } = req.body;
 
-    // Joi schema
-    // const { error, value } = studentValidationSchema.validate(studentData);
-    const zodValidation = UserValidation.ZodSchema.parse(userData);
-
-    const result = await UserServices.createStudentIntoDB(zodValidation);
+    // const zodValidation = studentZodSchema.parse(studentData);
+    const result = await UserServices.createStudentIntoDB(
+      password,
+      studentData,
+    );
 
     res.status(200).json({
       success: true,
@@ -27,5 +27,5 @@ const createUser = async (req: Request, res: Response) => {
 };
 
 export const UserController = {
-  createUser,
+  createStudent,
 };

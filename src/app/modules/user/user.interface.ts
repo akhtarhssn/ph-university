@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 
 export interface IUser {
   id: string;
-  password: string;
+  password?: string;
   needPasswordChange: boolean;
   role: 'Admin' | 'Faculty' | 'Student';
   status: 'Active' | 'Blocked';

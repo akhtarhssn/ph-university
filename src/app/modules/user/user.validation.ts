@@ -6,7 +6,8 @@ const ZodSchema = z.object({
     .string({
       invalid_type_error: 'Password must be a valid string',
     })
-    .max(30, { message: 'Password cannot be more than 30 characters' }),
+    .max(30, { message: 'Password cannot be more than 30 characters' })
+    .optional(),
   needPasswordChange: z.boolean().optional().default(true),
   role: z.enum(['Admin', 'Faculty', 'Student']),
   status: z.enum(['Active', 'Blocked']).default('Active'),

@@ -46,6 +46,9 @@ const localGuardianZodSchema = z.object({
 // Define Zod schema for the main Student model
 const studentZodSchema = z.object({
   id: z.string(),
+  userId: z.object({
+    id: z.instanceof(Object).transform((id) => id.toString()),
+  }),
   name: userNameZodSchema,
   gender: z.enum(['Male', 'Female']),
   birthDate: z.string(),
