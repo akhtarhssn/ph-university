@@ -10,6 +10,7 @@ const createStudent = async (
   try {
     const { password, student: studentData } = req.body;
 
+    // TODO: zod validation stopped
     // const zodValidation = studentZodSchema.parse(studentData);
     const result = await UserServices.createStudentIntoDB(
       password,
