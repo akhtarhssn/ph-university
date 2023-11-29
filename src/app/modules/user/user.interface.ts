@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export interface IUser {
   id: string;
   password: string;
@@ -5,4 +7,10 @@ export interface IUser {
   role: 'Admin' | 'Faculty' | 'Student';
   status: 'Active' | 'Blocked';
   isDeleted: boolean;
+}
+
+// Custom static methods:
+export interface UserModel extends Model<IUser> {
+  // eslint-disable-next-line no-unused-vars
+  userExists(id: string): Promise<IUser | null>;
 }

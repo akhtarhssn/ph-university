@@ -10,6 +10,7 @@ app.use(cors());
 
 // application routes
 app.use('/api/v1/students', StudentRoutes);
+app.use();
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');

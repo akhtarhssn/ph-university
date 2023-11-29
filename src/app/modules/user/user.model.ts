@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { IUser } from './user.interface';
+import { IUser, UserModel } from './user.interface';
 
-const UserSchema = new Schema<IUser>(
+const UserSchema = new Schema<IUser, UserModel>(
   {
     id: {
       type: String,
@@ -17,8 +17,8 @@ const UserSchema = new Schema<IUser>(
     status: {
       type: String,
       enum: ['Active', 'Blocked'],
-      default: 'Active',
       required: true,
+      default: 'Active',
     },
     isDeleted: { type: Boolean, required: true, default: false },
   },
@@ -27,5 +27,11 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
+// Custom static methods:
+UserSchema.statics.userExists = async (id: string) => {
+  const existingUser = await User.findOne({ id });
+  return existingUser;
+};
+
 // create model:
-export const User = model<IUser>('User', UserSchema);
+export const User = model<IUser, UserModel>('User', UserSchema);

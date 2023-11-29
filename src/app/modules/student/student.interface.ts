@@ -32,7 +32,6 @@ export interface ILocalGuardian {
 export interface IStudent {
   id: string;
   name: IUserName;
-  password: string;
   gender: 'Male' | 'Female';
   birthDate: string;
   email: string;
@@ -61,5 +60,6 @@ export interface IStudent {
 
 // Custom static methods:
 export interface StudentModel extends Model<IStudent> {
+  // eslint-disable-next-line no-unused-vars
   userExists(id: string): Promise<IStudent | null>;
 }
