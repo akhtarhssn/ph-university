@@ -5,6 +5,7 @@ import express, { Application, Request, Response } from 'express';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 import { StudentRoutes } from './app/modules/student/student.route';
 import { UserRoutes } from './app/modules/user/user.route';
+import notFound from './app/middleware/notFound';
 
 const app: Application = express();
 
@@ -23,5 +24,8 @@ app.get('/', (req: Request, res: Response) => {
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(globalErrorHandler);
+
+// Not Found
+app.use(notFound);
 
 export default app;
