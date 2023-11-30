@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
-import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import express, { Application, Request, Response } from 'express';
+import globalErrorHandler from './app/middleware/globalErrorHandler';
 import { StudentRoutes } from './app/modules/student/student.route';
 import { UserRoutes } from './app/modules/user/user.route';
 
@@ -21,15 +22,6 @@ app.get('/', (req: Request, res: Response) => {
 
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  const statusCode = 500;
-  const message = err.message || 'An error occurred';
-
-  return res.status(statusCode).json({
-    success: false,
-    message,
-    error: err,
-  });
-});
+app.use(globalErrorHandler);
 
 export default app;
