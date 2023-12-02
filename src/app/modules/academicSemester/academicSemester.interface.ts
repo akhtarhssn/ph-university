@@ -12,9 +12,13 @@ export type IMonth =
   | 'November'
   | 'December';
 
+export type ISemesterName = 'Autumn' | 'Summer' | 'Fall';
+
+export type ISemesterCode = '01' | '02' | '03';
+
 export interface IAcademicSemester {
-  name: 'Autumn' | 'Summer' | 'Fall';
-  code: '01' | '02' | '03';
+  name: ISemesterName;
+  code: ISemesterCode;
   year: Date;
   startMonth: IMonth;
   endMonth: IMonth;
