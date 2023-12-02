@@ -19,7 +19,7 @@ export type ISemesterCode = '01' | '02' | '03';
 export interface IAcademicSemester {
   name: ISemesterName;
   code: ISemesterCode;
-  year: Date;
+  year: string;
   startMonth: IMonth;
   endMonth: IMonth;
 }
