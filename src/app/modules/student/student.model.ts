@@ -144,8 +144,10 @@ const StudentSchema = new Schema<IStudent, StudentModel>(
       trim: true,
     },
     profileImg: { type: String },
-
-    //
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
@@ -153,58 +155,6 @@ const StudentSchema = new Schema<IStudent, StudentModel>(
     },
   },
 );
-
-// mongoose document middleware:
-// Pre save middleware: will work on create() and save()
-// StudentSchema.pre('save', async function (next) {
-//   // console.log(this, 'Pre Hook: will execute before saving data');
-//   // eslint-disable-next-line @typescript-eslint/no-this-alias
-//   const user = this;
-//   // password hashing and saving password
-//   user.password = await bcrypt.hash(
-//     user.password,
-//     Number(config.bcrypt_salt_round),
-//   );
-//   next();
-// });
-
-// Post save middleware: will work on create() and save()
-// StudentSchema.post('save', function (doc, next) {
-//   // console.log(this, 'Post Hook: will execute after saving data');
-//   doc.password = '';
-//   next();
-// });
-
-// Mongoose Virtual:
-// StudentSchema.virtual('fullName').get(function () {
-//   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-// });
-
-// Mongoose query middleware:
-// filter all data
-// StudentSchema.pre('find', async function (next) {
-//   this.find({ isDeleted: { $ne: true } });
-//   next();
-// });
-
-// StudentSchema.pre('findOne', async function (next) {
-//   this.find({ isDeleted: { $ne: true } });
-//   next();
-// });
-
-// StudentSchema.pre('aggregate', function (next) {
-//   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } }); //it works
-
-//   this.match({ isDeleted: { $ne: true } }); //it works
-
-//   next();
-// });
-
-// Custom instance methods:
-// StudentSchema.methods.userExists = async (id: string) => {
-//   const existingUser = await Student.findOne({ id });
-//   return existingUser;
-// };
 
 // Custom static methods:
 StudentSchema.statics.userExists = async (id: string) => {

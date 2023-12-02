@@ -44,18 +44,8 @@ export interface IStudent {
   guardian: IGuardian;
   localGuardian: ILocalGuardian;
   profileImg?: string;
+  isDeleted?: boolean;
 }
-
-// Custom instance methods:
-// export interface StudentMethods {
-//   userExists(id: string): Promise<IStudent | null>;
-// }
-
-// export type StudentModel = Model<
-//   IStudent,
-//   Record<string, never>,
-//   StudentMethods
-// >;
 
 // Custom static methods:
 export interface StudentModel extends Model<IStudent> {

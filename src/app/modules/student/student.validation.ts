@@ -44,23 +44,26 @@ const localGuardianZodSchema = z.object({
 });
 
 // Define Zod schema for the main Student model
-const studentZodSchema = z.object({
-  id: z.string(),
-  userId: z.object({
-    id: z.instanceof(Object).transform((id) => id.toString()),
+const createStudentZodSchema = z.object({
+  body: z.object({
+    password: z.string().min(6).max(20),
+    student: z.object({
+      name: userNameZodSchema,
+      gender: z.enum(['Male', 'Female']),
+      birthDate: z.string(),
+      email: z.string().email(),
+      phoneNumber: z.string(),
+      emergencyPhoneNumber: z.string(),
+      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+      presentAddress: addressZodSchema,
+      permanentAddress: addressZodSchema,
+      guardian: guardianZodSchema,
+      localGuardian: localGuardianZodSchema,
+      profileImg: z.string(),
+    }),
   }),
-  name: userNameZodSchema,
-  gender: z.enum(['Male', 'Female']),
-  birthDate: z.string(),
-  email: z.string().email(),
-  phoneNumber: z.string(),
-  emergencyPhoneNumber: z.string(),
-  bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-  presentAddress: addressZodSchema,
-  permanentAddress: addressZodSchema,
-  guardian: guardianZodSchema,
-  localGuardian: localGuardianZodSchema,
-  profileImg: z.string(),
 });
 
-export default studentZodSchema;
+export const studentZodSchema = {
+  createStudentZodSchema,
+};
