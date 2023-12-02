@@ -50,7 +50,7 @@ const createStudentZodSchema = z.object({
     student: z.object({
       name: userNameZodSchema,
       gender: z.enum(['Male', 'Female']),
-      birthDate: z.string(),
+      birthDate: z.date().optional(),
       email: z.string().email(),
       phoneNumber: z.string(),
       emergencyPhoneNumber: z.string(),

@@ -34,7 +34,7 @@ export interface IStudent {
   userId: Types.ObjectId;
   name: IUserName;
   gender: 'Male' | 'Female';
-  birthDate: string;
+  birthDate?: Date;
   email: string;
   phoneNumber: string;
   emergencyPhoneNumber: string;
