@@ -28,9 +28,9 @@ const getAllSemesterController = catchAsync(async (req, res) => {
 
 // get a single semester data
 const getSemesterController = catchAsync(async (req, res) => {
-  const { id } = req.params;
+  const { semesterId } = req.params;
 
-  const result = await SemesterServices.getSemesterService(id);
+  const result = await SemesterServices.getSemesterService(semesterId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -40,8 +40,24 @@ const getSemesterController = catchAsync(async (req, res) => {
   });
 });
 
+const updateSemesterController = catchAsync(async (req, res) => {
+  const { semesterId } = req.params;
+  const result = await SemesterServices.updateSemesterService(
+    semesterId,
+    req.body,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Semester Updated Successfully',
+    data: result,
+  });
+});
+
 export const SemesterControllers = {
   createSemesterController,
   getAllSemesterController,
   getSemesterController,
+  updateSemesterController,
 };

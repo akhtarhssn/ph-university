@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import { semesterCodeMapper } from './academicSemester.constant';
 import { IAcademicSemester } from './academicSemester.interface';
 import { SemesterModel } from './academicSemester.model';
@@ -23,11 +23,35 @@ const getAllSemesterService = async () => {
 };
 
 // Get a single semester data
+// const getSemesterService = async (id: string) => {
+//   const objectId = new mongoose.Types.ObjectId(id);
+
+//   const result = await SemesterModel.aggregate([{ $match: { _id: objectId } }]);
+
+//   return result;
+// };
+
 const getSemesterService = async (id: string) => {
-  const objectId = new mongoose.Types.ObjectId(id);
+  const result = await SemesterModel.findById(id);
+  return result;
+};
 
-  const result = await SemesterModel.aggregate([{ $match: { _id: objectId } }]);
+// Update semester data:
+const updateSemesterService = async (
+  id: string,
+  payload: Partial<IAcademicSemester>,
+) => {
+  if (
+    payload.name &&
+    payload.code &&
+    semesterCodeMapper[payload.name] !== payload.code
+  ) {
+    throw new Error('invalid semester code');
+  }
 
+  const result = await SemesterModel.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
   return result;
 };
 
@@ -35,4 +59,5 @@ export const SemesterServices = {
   createSemesterService,
   getAllSemesterService,
   getSemesterService,
+  updateSemesterService,
 };

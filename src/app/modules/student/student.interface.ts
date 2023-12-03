@@ -43,6 +43,7 @@ export interface IStudent {
   permanentAddress: IAddress;
   guardian: IGuardian;
   localGuardian: ILocalGuardian;
+  admissionSemester: Types.ObjectId;
   profileImg?: string;
   isDeleted?: boolean;
 }
