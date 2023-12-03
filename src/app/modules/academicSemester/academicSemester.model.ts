@@ -19,6 +19,21 @@ const SemesterSchema = new Schema<IAcademicSemester>(
   },
 );
 
+// pre hook middleware:
+SemesterSchema.pre('save', async function (next) {
+  const semesterExists = await SemesterModel.findOne({
+    year: this.year,
+    name: this.name,
+  });
+
+  if (semesterExists) {
+    throw new Error(
+      `${this.name} semester already exists for year ${this.year}`,
+    );
+  }
+  next();
+});
+
 // create model:
 export const SemesterModel = model<IAcademicSemester>(
   'Semester',
