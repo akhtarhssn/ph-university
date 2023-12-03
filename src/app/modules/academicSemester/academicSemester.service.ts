@@ -3,17 +3,19 @@ import { SemesterModel } from './academicSemester.model';
 
 const createSemesterService = async (payload: IAcademicSemester) => {
   interface ISemesterCodeMapper {
-    Autumn: '01';
-    Summer: '02';
-    Fall: '03';
+    [key: string]: string;
   }
 
   // checking semester name and code match:
-  const semesterNameCodeMapper: ISemesterCodeMapper = {
+  const semesterCodeMapper: ISemesterCodeMapper = {
     Autumn: '01',
     Summer: '02',
     Fall: '03',
   };
+
+  if (semesterCodeMapper[payload.name] !== payload.code) {
+    throw new Error("Semester name and code doesn't match");
+  }
 
   const result = await SemesterModel.create(payload);
 
