@@ -23,3 +23,7 @@ export interface IAcademicSemester {
   startMonth: IMonth;
   endMonth: IMonth;
 }
+
+export interface ISemesterCodeMapper {
+  [key: string]: string;
+}
