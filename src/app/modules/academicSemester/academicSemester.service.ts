@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { semesterCodeMapper } from './academicSemester.constant';
 import { IAcademicSemester } from './academicSemester.interface';
 import { SemesterModel } from './academicSemester.model';
@@ -14,13 +15,24 @@ const createSemesterService = async (payload: IAcademicSemester) => {
   return result;
 };
 
-const getSemesterServices = async () => {
+// Get all semester data
+const getAllSemesterService = async () => {
   const result = await SemesterModel.find();
+
+  return result;
+};
+
+// Get a single semester data
+const getSemesterService = async (id: string) => {
+  const objectId = new mongoose.Types.ObjectId(id);
+
+  const result = await SemesterModel.aggregate([{ $match: { _id: objectId } }]);
 
   return result;
 };
 
 export const SemesterServices = {
   createSemesterService,
-  getSemesterServices,
+  getAllSemesterService,
+  getSemesterService,
 };

@@ -14,8 +14,9 @@ const createSemesterController = catchAsync(async (req, res) => {
   });
 });
 
-const getSemesterController = catchAsync(async (req, res) => {
-  const result = await SemesterServices.getSemesterServices();
+// get all semesters data
+const getAllSemesterController = catchAsync(async (req, res) => {
+  const result = await SemesterServices.getAllSemesterService();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -25,7 +26,22 @@ const getSemesterController = catchAsync(async (req, res) => {
   });
 });
 
+// get a single semester data
+const getSemesterController = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await SemesterServices.getSemesterService(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic Semester Data Retrieved Successfully',
+    data: result,
+  });
+});
+
 export const SemesterControllers = {
   createSemesterController,
+  getAllSemesterController,
   getSemesterController,
 };
