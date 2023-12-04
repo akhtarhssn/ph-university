@@ -7,11 +7,6 @@ import { User } from './user.model';
 import { generateStudentId } from './user.utils';
 
 const createStudentIntoDB = async (password: string, payload: IStudent) => {
-  // Static methods:
-  if (await User.userExists(payload.id)) {
-    throw new Error(`ID: ${payload.id}, User already exists`);
-  }
-
   // create a user object:
   const userData: Partial<IUser> = {};
 
@@ -32,6 +27,12 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
 
   // set user id:
   userData.id = await generateStudentId(admissionSemester);
+
+  // check duplicate email:
+  const duplicateEmail = await Student.findOne({ email: payload.email });
+  if (duplicateEmail) {
+    throw new Error(`An User with ${duplicateEmail.email} already exists`);
+  }
 
   // create a user
   const newUser = await User.create(userData);

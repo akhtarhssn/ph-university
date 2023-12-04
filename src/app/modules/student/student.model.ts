@@ -15,18 +15,28 @@ const userNameSchema = new Schema<IUserName>({
   firstName: {
     type: String,
     required: [true, 'First Name is required'],
+    trim: true,
   },
-  middleName: { type: String },
+  middleName: { type: String, trim: true },
   lastName: {
     type: String,
     required: [true, 'Last Name is required'],
+    trim: true,
   },
 });
 
 const addressSchema = new Schema<IAddress>({
-  street: { type: String, required: [true, 'Street address is required'] },
-  city: { type: String, required: [true, 'City name is required'] },
-  postalCode: { type: String, required: [true, 'Post code is required'] },
+  street: {
+    type: String,
+    required: [true, 'Street address is required'],
+    trim: true,
+  },
+  city: { type: String, required: [true, 'City name is required'], trim: true },
+  postalCode: {
+    type: String,
+    required: [true, 'Post code is required'],
+    trim: true,
+  },
 });
 
 const guardianSchema = new Schema<IGuardian>({
@@ -34,25 +44,41 @@ const guardianSchema = new Schema<IGuardian>({
   fatherOccupation: {
     type: String,
     required: [true, 'Father occupation is requires'],
+    trim: true,
   },
   fatherPhone: {
     type: String,
     required: [true, 'Father phone number is required'],
+    trim: true,
   },
-  motherName: { type: String, required: [true, 'Mother name is required'] },
+  motherName: {
+    type: String,
+    required: [true, 'Mother name is required'],
+    trim: true,
+  },
   motherOccupation: {
     type: String,
     required: [true, 'Mother occupation is required'],
+    trim: true,
   },
   motherPhone: {
     type: String,
     required: [true, 'Mother phone number is required'],
+    trim: true,
   },
 });
 
 const localGuardianSchema = new Schema<ILocalGuardian>({
-  name: { type: String, required: [true, 'Local Guardian name is required'] },
-  email: { type: String, required: [true, 'Local Guardian email is required'] },
+  name: {
+    type: String,
+    required: [true, 'Local Guardian name is required'],
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: [true, 'Local Guardian email is required'],
+    trim: true,
+  },
   phone: {
     type: String,
     required: [true, 'Local Guardian phone number is required'],
@@ -60,6 +86,7 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
   occupation: {
     type: String,
     required: [true, 'Local Guardian occupation is required'],
+    trim: true,
   },
   address: {
     type: addressSchema,
@@ -82,7 +109,6 @@ const StudentSchema = new Schema<IStudent, StudentModel>({
   name: {
     type: userNameSchema,
     required: [true, 'Name field is required'],
-    trim: true,
   },
   gender: {
     type: String,
@@ -100,43 +126,34 @@ const StudentSchema = new Schema<IStudent, StudentModel>({
     type: String,
     required: [true, 'Student email is required'],
     unique: true,
-    trim: true,
   },
   phoneNumber: {
     type: String,
     required: [true, 'Student phone number is required'],
-    unique: true,
-    trim: true,
   },
   emergencyPhoneNumber: {
     type: String,
     required: [true, 'Student emergency phone number is required'],
-    trim: true,
   },
   bloodGroup: {
     type: String,
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-    trim: true,
   },
   presentAddress: {
     type: addressSchema,
     required: [true, 'Student present address is required'],
-    trim: true,
   },
   permanentAddress: {
     type: addressSchema,
     required: [true, 'Student permanent address is required'],
-    trim: true,
   },
   guardian: {
     type: guardianSchema,
     required: [true, 'Student guardian is required'],
-    trim: true,
   },
   localGuardian: {
     type: localGuardianSchema,
     required: [true, 'Student local guardian is required'],
-    trim: true,
   },
   admissionSemester: { type: Schema.ObjectId, ref: 'Semester' },
   profileImg: { type: String },
@@ -145,12 +162,6 @@ const StudentSchema = new Schema<IStudent, StudentModel>({
     default: false,
   },
 });
-
-// Custom static methods:
-StudentSchema.statics.userExists = async (id: string) => {
-  const existingUser = await Student.findOne({ id });
-  return existingUser;
-};
 
 // create model:
 export const Student = model<IStudent, StudentModel>('Student', StudentSchema);
