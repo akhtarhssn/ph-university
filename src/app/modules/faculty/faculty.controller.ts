@@ -20,7 +20,7 @@ const getAllFaculty = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty data retrieved successfully',
+    message: 'Faculties data retrieved successfully',
     data: result,
   });
 });
@@ -40,7 +40,7 @@ const getSingleFaculty = catchAsync(async (req, res) => {
 
 const updateFaculty = catchAsync(async (req, res) => {
   const { facultyId } = req.params;
-  const result = FacultyServices.updateFaculty(facultyId, req.body);
+  const result = await FacultyServices.updateFaculty(facultyId, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post(
   '/create-faculty',
-  validateRequest(FacultyValidation.facultyZodValidation),
+  validateRequest(FacultyValidation.createFacultyZodValidation),
   FacultyController.createFaculty,
 );
 
@@ -15,12 +15,10 @@ router.get('/', FacultyController.getAllFaculty);
 
 router.get('/:facultyId', FacultyController.getSingleFaculty);
 
-router.put(
+router.patch(
   '/:facultyId',
-  validateRequest(FacultyValidation.facultyZodValidation),
+  validateRequest(FacultyValidation.updateFacultyZodValidation),
   FacultyController.updateFaculty,
 );
 
-export const SemesterRoutes = {
-  router,
-};
+export const FacultyRoutes = router;
