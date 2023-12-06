@@ -1,3 +1,4 @@
+import { AppError } from '../../utils/AppError';
 import { IStudent } from './student.interface';
 import { Student } from './student.model';
 
@@ -15,6 +16,11 @@ const getAllStudent = async () => {
 
 const getOneStudent = async (id: string) => {
   // const result = await Student.findOne({ id });
+
+  const student = await Student.findById(id);
+  if (!student) {
+    throw new AppError(404, `Studeint with id:'${id}' does not exist`);
+  }
 
   // aggregate:
   const result = await Student.findById(id)
