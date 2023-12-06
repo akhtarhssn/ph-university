@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../errors/AppError';
 
 const UserSchema = new Schema<IUser, UserModel>(
   {

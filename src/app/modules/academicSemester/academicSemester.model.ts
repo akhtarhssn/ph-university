@@ -5,7 +5,7 @@ import {
   SemesterCodeSchema,
   SemesterNameSchema,
 } from './academicSemester.constant';
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../errors/AppError';
 
 const SemesterSchema = new Schema<IAcademicSemester>(
   {

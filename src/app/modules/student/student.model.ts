@@ -8,7 +8,7 @@ import {
   // StudentMethods,
   StudentModel,
 } from './student.interface';
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../errors/AppError';
 // import bcrypt from 'bcrypt';
 // import config from '../../config';
 
