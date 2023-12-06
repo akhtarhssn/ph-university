@@ -5,6 +5,7 @@ import {
   SemesterCodeSchema,
   SemesterNameSchema,
 } from './academicSemester.constant';
+import { AppError } from '../../utils/AppError';
 
 const SemesterSchema = new Schema<IAcademicSemester>(
   {
@@ -27,7 +28,8 @@ SemesterSchema.pre('save', async function (next) {
   });
 
   if (semesterExists) {
-    throw new Error(
+    throw new AppError(
+      409,
       `${this.name} semester already exists for year ${this.year}`,
     );
   }
@@ -40,7 +42,7 @@ SemesterSchema.pre('findOneAndUpdate', async function (next) {
   const idExists = await SemesterModel.findOne(query);
 
   if (!idExists) {
-    throw new Error(`Semester with id: '${query._id}' doesn't exists`);
+    throw new AppError(404, `Semester with id: '${query._id}' doesn't exists`);
   }
 
   next();

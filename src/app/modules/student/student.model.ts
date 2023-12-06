@@ -8,6 +8,7 @@ import {
   // StudentMethods,
   StudentModel,
 } from './student.interface';
+import { AppError } from '../../utils/AppError';
 // import bcrypt from 'bcrypt';
 // import config from '../../config';
 
@@ -168,7 +169,7 @@ StudentSchema.pre('save', async function (next) {
   const isExists = await Student.findOne({ name: this.name });
 
   if (isExists) {
-    throw new Error(`${this.name} already exists`);
+    throw new AppError(409, `${this.name} already exists`);
   }
   next();
 });
@@ -189,7 +190,7 @@ StudentSchema.pre('findOneAndUpdate', async function (next) {
   const idExists = await Student.findOne(query);
 
   if (!idExists) {
-    throw new Error(`Student with id: '${query._id}' doesn't exists`);
+    throw new AppError(404, `Student with id: '${query._id}' doesn't exists`);
   }
 
   next();

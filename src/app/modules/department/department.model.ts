@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IDepartment as IDepartment } from './department.interface';
+import { AppError } from '../../utils/AppError';
 
 const departmentSchema = new Schema<IDepartment>(
   {
@@ -22,7 +23,7 @@ departmentSchema.pre('save', async function (next) {
   const isExists = await DepartmentModel.findOne({ name: this.name });
 
   if (isExists) {
-    throw new Error(`${this.name} already exists`);
+    throw new AppError(409, `${this.name} already exists`);
   }
   next();
 });
@@ -33,7 +34,10 @@ departmentSchema.pre('findOneAndUpdate', async function (next) {
   const idExists = await DepartmentModel.findOne(query);
 
   if (!idExists) {
-    throw new Error(`Department with id: '${query._id}' doesn't exists`);
+    throw new AppError(
+      404,
+      `Department with id: '${query._id}' doesn't exists`,
+    );
   }
 
   next();

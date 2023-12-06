@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IFaculty } from './faculty.interface';
+import { AppError } from '../../utils/AppError';
 
 const facultySchema = new Schema<IFaculty>(
   {
@@ -18,7 +19,7 @@ facultySchema.pre('save', async function (next) {
   const isExists = await FacultyModel.findOne({ name: this.name });
 
   if (isExists) {
-    throw new Error(`${this.name} already exists`);
+    throw new AppError(409, `${this.name} already exists`);
   }
   next();
 });
@@ -29,7 +30,7 @@ facultySchema.pre('findOneAndUpdate', async function (next) {
   const idExists = await FacultyModel.findOne(query);
 
   if (!idExists) {
-    throw new Error(`Faculty with id: '${query._id}' doesn't exists`);
+    throw new AppError(404, `Faculty with id: '${query._id}' doesn't exists`);
   }
 
   next();

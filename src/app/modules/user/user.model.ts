@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
+import { AppError } from '../../utils/AppError';
 
 const UserSchema = new Schema<IUser, UserModel>(
   {
@@ -59,7 +60,7 @@ UserSchema.pre('findOneAndUpdate', async function (next) {
   const idExists = await User.findOne(query);
 
   if (!idExists) {
-    throw new Error(`User with id: '${query._id}' doesn't exists`);
+    throw new AppError(404, `User with id: '${query._id}' doesn't exists`);
   }
 
   next();
