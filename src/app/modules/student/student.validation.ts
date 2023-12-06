@@ -65,6 +65,29 @@ const createStudentZodSchema = z.object({
   }),
 });
 
+const updateStudentZodSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: userNameZodSchema.optional(),
+      gender: z.enum(['Male', 'Female']).optional(),
+      birthDate: z.string().optional(),
+      email: z.string().email().optional(),
+      phoneNumber: z.string().optional(),
+      emergencyPhoneNumber: z.string().optional(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: addressZodSchema.optional(),
+      permanentAddress: addressZodSchema.optional(),
+      guardian: guardianZodSchema.optional(),
+      localGuardian: localGuardianZodSchema.optional(),
+      admissionSemester: z.string().optional(),
+      profileImg: z.string().optional(),
+    }),
+  }),
+});
+
 export const studentZodSchema = {
   createStudentZodSchema,
+  updateStudentZodSchema,
 };

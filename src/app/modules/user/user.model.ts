@@ -53,6 +53,18 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+UserSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+
+  const idExists = await User.findOne(query);
+
+  if (!idExists) {
+    throw new Error(`User with id: '${query._id}' doesn't exists`);
+  }
+
+  next();
+});
+
 // Post save middleware: will work on create() and save()
 UserSchema.post('save', function (doc, next) {
   // console.log(this, 'Post Hook: will execute after saving data');

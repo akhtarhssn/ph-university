@@ -163,5 +163,36 @@ const StudentSchema = new Schema<IStudent, StudentModel>({
   },
 });
 
+StudentSchema.pre('save', async function (next) {
+  const isExists = await Student.findOne({ name: this.name });
+
+  if (isExists) {
+    throw new Error(`${this.name} already exists`);
+  }
+  next();
+});
+
+StudentSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+StudentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
+StudentSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+
+  const idExists = await Student.findOne(query);
+
+  if (!idExists) {
+    throw new Error(`Student with id: '${query._id}' doesn't exists`);
+  }
+
+  next();
+});
+
 // create model:
 export const Student = model<IStudent, StudentModel>('Student', StudentSchema);

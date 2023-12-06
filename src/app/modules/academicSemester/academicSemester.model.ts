@@ -34,6 +34,18 @@ SemesterSchema.pre('save', async function (next) {
   next();
 });
 
+SemesterSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+
+  const idExists = await SemesterModel.findOne(query);
+
+  if (!idExists) {
+    throw new Error(`Semester with id: '${query._id}' doesn't exists`);
+  }
+
+  next();
+});
+
 // create model:
 export const SemesterModel = model<IAcademicSemester>(
   'Semester',

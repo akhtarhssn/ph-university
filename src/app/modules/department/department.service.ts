@@ -14,13 +14,13 @@ const createDepartment = async (payload: IDepartment) => {
 };
 
 const getAllDepartments = async () => {
-  const result = await DepartmentModel.find();
+  const result = await DepartmentModel.find().populate('academicFaculty');
 
   return result;
 };
 
 const getSingleDepartment = async (id: string) => {
-  const result = await DepartmentModel.findById(id);
+  const result = await DepartmentModel.findById(id).populate('academicFaculty');
 
   return result;
 };
