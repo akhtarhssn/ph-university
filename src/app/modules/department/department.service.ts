@@ -2,6 +2,12 @@ import { IDepartment } from './department.interface';
 import { DepartmentModel } from './department.model';
 
 const createDepartment = async (payload: IDepartment) => {
+  // const isExists = await DepartmentModel.findOne({ name: payload.name });
+
+  // if (isExists) {
+  //   throw new Error(`${payload.name} already exists`);
+  // }
+
   const result = await DepartmentModel.create(payload);
 
   return result;
