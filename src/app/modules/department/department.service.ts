@@ -5,7 +5,7 @@ const createDepartment = async (payload: IDepartment) => {
   // const isExists = await DepartmentModel.findOne({ name: payload.name });
 
   // if (isExists) {
-  //   throw new Error(`${payload.name} already exists`);
+  //   throw new AppError(409, `${payload.name} already exists`);
   // }
 
   const result = await DepartmentModel.create(payload);

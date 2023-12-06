@@ -1,4 +1,5 @@
 import config from '../../config';
+import { AppError } from '../../errors/AppError';
 import { SemesterModel } from '../academicSemester/academicSemester.model';
 import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
@@ -22,7 +23,7 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
   );
 
   if (!admissionSemester) {
-    throw new Error('Academic semester not found');
+    throw new AppError(404, 'Academic semester not found');
   }
 
   // set user id:
@@ -31,7 +32,10 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
   // check duplicate email:
   const duplicateEmail = await Student.findOne({ email: payload.email });
   if (duplicateEmail) {
-    throw new Error(`An User with ${duplicateEmail.email} already exists`);
+    throw new AppError(
+      409,
+      `An User with ${duplicateEmail.email} already exists`,
+    );
   }
 
   // create a user

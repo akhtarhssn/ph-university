@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import { AppError } from '../../errors/AppError';
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { User } from './user.model';
 
@@ -11,7 +13,7 @@ const findLastEnrolledStudent = async () => {
 // auto generated code --> year semesterCode 4 digit number
 export const generateStudentId = async (payload: IAcademicSemester) => {
   if (!payload) {
-    throw new Error('Invalid payload'); // or handle this case as appropriate
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid payload'); // or handle this case as appropriate
   }
 
   let currentId = (0).toString(); //by default
