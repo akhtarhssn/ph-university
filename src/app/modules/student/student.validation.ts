@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Define Zod schema for UserName
-const userNameZodSchema = z.object({
+const createUserNameZodSchema = z.object({
   firstName: z
     .string()
     .min(1)
@@ -18,14 +18,14 @@ const userNameZodSchema = z.object({
 });
 
 // Define Zod schema for Address
-const addressZodSchema = z.object({
+const createAddressZodSchema = z.object({
   street: z.string().min(1),
   city: z.string().min(1),
   postalCode: z.string().min(1),
 });
 
 // Define Zod schema for Guardian
-const guardianZodSchema = z.object({
+const createGuardianZodSchema = z.object({
   fatherName: z.string().min(1),
   fatherOccupation: z.string().min(1),
   fatherPhone: z.string().min(1),
@@ -35,12 +35,12 @@ const guardianZodSchema = z.object({
 });
 
 // Define Zod schema for LocalGuardian
-const localGuardianZodSchema = z.object({
+const createLocalGuardianZodSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   phone: z.string().min(1),
   occupation: z.string().min(1),
-  address: addressZodSchema,
+  address: createAddressZodSchema,
 });
 
 // Define Zod schema for the main Student model
@@ -48,17 +48,17 @@ const createStudentZodSchema = z.object({
   body: z.object({
     password: z.string().min(6).max(20),
     student: z.object({
-      name: userNameZodSchema,
+      name: createUserNameZodSchema,
       gender: z.enum(['Male', 'Female']),
       birthDate: z.string().optional(),
       email: z.string().email(),
       phoneNumber: z.string(),
       emergencyPhoneNumber: z.string(),
       bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-      presentAddress: addressZodSchema,
-      permanentAddress: addressZodSchema,
-      guardian: guardianZodSchema,
-      localGuardian: localGuardianZodSchema,
+      presentAddress: createAddressZodSchema,
+      permanentAddress: createAddressZodSchema,
+      guardian: createGuardianZodSchema,
+      localGuardian: createLocalGuardianZodSchema,
       admissionSemester: z.string(),
       academicDepartment: z.string(),
       profileImg: z.string(),
@@ -66,10 +66,55 @@ const createStudentZodSchema = z.object({
   }),
 });
 
+// Update zod schema
+const updateUserNameZodSchema = z.object({
+  firstName: z
+    .string()
+    .min(1)
+    .refine((value) => /^[A-Z][a-z]*$/.test(value), {
+      message: 'First Name should be in capitalized format and alphabetic',
+    })
+    .optional(),
+  middleName: z.string().optional(),
+  lastName: z
+    .string()
+    .min(1)
+    .refine((value) => /^[A-Z][a-z]*$/.test(value), {
+      message: 'Last Name must be alphabetic',
+    })
+    .optional(),
+});
+
+// Define Zod schema for Address
+const updateAddressZodSchema = z.object({
+  street: z.string().min(1).optional(),
+  city: z.string().min(1).optional(),
+  postalCode: z.string().min(1).optional(),
+});
+
+// Define Zod schema for Guardian
+const updateGuardianZodSchema = z.object({
+  fatherName: z.string().min(1).optional(),
+  fatherOccupation: z.string().min(1).optional(),
+  fatherPhone: z.string().min(1).optional(),
+  motherName: z.string().min(1).optional(),
+  motherOccupation: z.string().min(1).optional(),
+  motherPhone: z.string().min(1).optional(),
+});
+
+// Define Zod schema for LocalGuardian
+const updateLocalGuardianZodSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  phone: z.string().min(1).optional(),
+  occupation: z.string().min(1).optional(),
+  address: updateAddressZodSchema.optional(),
+});
+
 const updateStudentZodSchema = z.object({
   body: z.object({
     student: z.object({
-      name: userNameZodSchema.optional(),
+      name: updateUserNameZodSchema.optional(),
       gender: z.enum(['Male', 'Female']).optional(),
       birthDate: z.string().optional(),
       email: z.string().email().optional(),
@@ -78,10 +123,10 @@ const updateStudentZodSchema = z.object({
       bloodGroup: z
         .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
         .optional(),
-      presentAddress: addressZodSchema.optional(),
-      permanentAddress: addressZodSchema.optional(),
-      guardian: guardianZodSchema.optional(),
-      localGuardian: localGuardianZodSchema.optional(),
+      presentAddress: updateAddressZodSchema.optional(),
+      permanentAddress: updateAddressZodSchema.optional(),
+      guardian: updateGuardianZodSchema.optional(),
+      localGuardian: updateLocalGuardianZodSchema.optional(),
       admissionSemester: z.string().optional(),
       academicDepartment: z.string().optional(),
       profileImg: z.string().optional(),

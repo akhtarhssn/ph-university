@@ -1,9 +1,9 @@
+import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import { AppError } from '../../errors/AppError';
+import { User } from '../user/user.model';
 import { IStudent } from './student.interface';
 import { Student } from './student.model';
-import httpStatus from 'http-status';
-import { User } from '../user/user.model';
 
 const getAllStudent = async () => {
   const result = await Student.find()
@@ -20,13 +20,7 @@ const getAllStudent = async () => {
 const getOneStudent = async (id: string) => {
   // const result = await Student.findOne({ id });
 
-  const student = await Student.findById(id);
-  if (!student) {
-    throw new AppError(404, `Student with id:'${id}' does not exist`);
-  }
-
-  // aggregate:
-  const result = await Student.findById(id)
+  const student = await Student.findOne({ id: id })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -34,12 +28,40 @@ const getOneStudent = async (id: string) => {
         path: 'academicFaculty',
       },
     });
-  return result;
+  if (!student) {
+    throw new AppError(404, `Student with id:'${id}' does not exist`);
+  }
+
+  return student;
 };
 
-const updateStudent = async (id: string, payload: IStudent) => {
-  const result = await Student.findOneAndUpdate({ _id: id }, payload, {
+const updateStudent = async (id: string, payload: Partial<IStudent>) => {
+  const { name, guardian, localGuardian, ...remainingData } = payload;
+
+  const updatedData: Record<string, unknown> = { ...remainingData };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      updatedData[`name.${key}`] = value;
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      updatedData[`guardian.${key}`] = value;
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      updatedData[`localGuardian.${key}`] = value;
+    }
+  }
+
+  // console.log(updatedData);
+
+  const result = await Student.findOneAndUpdate({ id }, updatedData, {
     new: true,
+    runValidators: true,
   });
 
   return result;

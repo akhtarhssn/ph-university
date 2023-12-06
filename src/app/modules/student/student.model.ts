@@ -179,11 +179,6 @@ StudentSchema.pre('findOne', function (next) {
   next();
 });
 
-StudentSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
-});
-
 StudentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery();
 
