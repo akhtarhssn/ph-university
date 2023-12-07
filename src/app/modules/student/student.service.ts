@@ -57,7 +57,7 @@ const updateStudent = async (id: string, payload: Partial<IStudent>) => {
     }
   }
 
-  // console.log(updatedData);
+  console.log(updatedData);
 
   const result = await Student.findOneAndUpdate({ id }, updatedData, {
     new: true,
