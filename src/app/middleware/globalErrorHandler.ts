@@ -4,6 +4,7 @@
 import { ErrorRequestHandler } from 'express';
 import { ZodError, ZodIssue } from 'zod';
 import { IErrorSources } from '../interface/error.interface';
+import config from '../config';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // setting default values
@@ -46,6 +47,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     success: false,
     message,
     errorSources,
+
+    stack: config.node_env === 'development' ? err?.stack : null,
   });
 };
 
