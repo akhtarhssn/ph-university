@@ -19,14 +19,14 @@ const departmentSchema = new Schema<IDepartment>(
   },
 );
 
-departmentSchema.pre('save', async function (next) {
-  const isExists = await DepartmentModel.findOne({ name: this.name });
+// departmentSchema.pre('save', async function (next) {
+//   const isExists = await DepartmentModel.findOne({ name: this.name });
 
-  if (isExists) {
-    throw new AppError(409, `${this.name} already exists`);
-  }
-  next();
-});
+//   if (isExists) {
+//     throw new AppError(409, `${this.name} already exists`);
+//   }
+//   next();
+// });
 
 departmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery();
