@@ -19,6 +19,14 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
+const testRoute = (req: Request, res: Response) => {
+  Promise.reject();
+  // const a = 10;
+  // res.send(a);
+};
+
+app.get('/test', testRoute);
+
 // global error handler
 app.use(globalErrorHandler);
 

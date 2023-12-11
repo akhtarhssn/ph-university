@@ -8,7 +8,7 @@ import { handleZodError } from '../errors/handleZodError';
 import { IErrorSources } from '../interface/error.interface';
 import { handleValidationError } from '../errors/handleValidationError';
 import { handleCastError } from '../errors/handleCastError';
-import { handleDuplicateError } from '../errors/handleDupplicateError';
+import { handleDuplicateError } from '../errors/handleDuplicateError';
 import { AppError } from '../errors/AppError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
