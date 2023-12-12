@@ -11,7 +11,7 @@ const departmentSchema = new Schema<IDepartment>(
     },
     academicFaculty: {
       type: Schema.Types.ObjectId,
-      ref: 'Faculty',
+      ref: 'AcademicFaculty',
     },
   },
   {
