@@ -10,7 +10,7 @@ const getAllStudent = async (query: Record<string, unknown>) => {
   let searchTerm = '';
   searchTerm = query?.searchTerm as string;
 
-  console.log('base Query', query);
+  const queryObj = { ...query }; //copy
 
   const searchableFields = [
     'email',
@@ -25,8 +25,14 @@ const getAllStudent = async (query: Record<string, unknown>) => {
     })),
   });
 
-  const result = await searchQuery
-    .find(query)
+  const excludeFields = ['searchTerm', 'sort'];
+
+  excludeFields.forEach((el) => delete queryObj[el]);
+
+  console.log(queryObj);
+
+  const filterQuery = searchQuery
+    .find(queryObj)
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -35,7 +41,16 @@ const getAllStudent = async (query: Record<string, unknown>) => {
       },
     });
 
-  return result;
+  let sort = '-createdAt';
+
+  if (query?.sort) {
+    sort = query?.sort as string;
+    console.log(sort);
+  }
+
+  const sortQuery = filterQuery.sort(sort);
+
+  return sortQuery;
 };
 
 const getOneStudent = async (id: string) => {
