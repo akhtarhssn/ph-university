@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import { AppError } from '../../errors/AppError';
@@ -5,16 +6,43 @@ import { User } from '../user/user.model';
 import { IStudent } from './student.interface';
 import { Student } from './student.model';
 
-const getAllStudent = async () => {
-  const result = await Student.find()
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-  return result;
+const getAllStudent = async (query: Record<string, unknown>) => {
+  let searchTerm = '';
+  searchTerm = query?.searchTerm as string;
+
+  console.log('base Query', query);
+
+  const searchableFields = [
+    'email',
+    'name.firstName',
+    'name.middleName',
+    'presentAddress',
+  ];
+  if (searchTerm) {
+    try {
+      const searchQuery = Student.find({
+        $or: searchableFields.map((field) => ({
+          [field]: new RegExp(searchTerm, 'i'),
+        })),
+      });
+
+      const result = await searchQuery
+        .find(query)
+        .populate('admissionSemester')
+        .populate({
+          path: 'academicDepartment',
+          populate: {
+            path: 'academicFaculty',
+          },
+        });
+
+      return result;
+    } catch (error: any) {
+      throw Error(error);
+    }
+  } else {
+    return [];
+  }
 };
 
 const getOneStudent = async (id: string) => {
@@ -56,8 +84,6 @@ const updateStudent = async (id: string, payload: Partial<IStudent>) => {
       updatedData[`localGuardian.${key}`] = value;
     }
   }
-
-  console.log(updatedData);
 
   const result = await Student.findOneAndUpdate({ id }, updatedData, {
     new: true,
