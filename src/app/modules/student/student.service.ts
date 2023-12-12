@@ -18,31 +18,24 @@ const getAllStudent = async (query: Record<string, unknown>) => {
     'name.middleName',
     'presentAddress',
   ];
-  if (searchTerm) {
-    try {
-      const searchQuery = Student.find({
-        $or: searchableFields.map((field) => ({
-          [field]: new RegExp(searchTerm, 'i'),
-        })),
-      });
 
-      const result = await searchQuery
-        .find(query)
-        .populate('admissionSemester')
-        .populate({
-          path: 'academicDepartment',
-          populate: {
-            path: 'academicFaculty',
-          },
-        });
+  const searchQuery = Student.find({
+    $or: searchableFields.map((field) => ({
+      [field]: new RegExp(searchTerm, 'i'),
+    })),
+  });
 
-      return result;
-    } catch (error: any) {
-      throw Error(error);
-    }
-  } else {
-    return [];
-  }
+  const result = await searchQuery
+    .find(query)
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
+
+  return result;
 };
 
 const getOneStudent = async (id: string) => {
