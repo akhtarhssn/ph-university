@@ -70,7 +70,7 @@ const updateCourse = async (id: string, payload: Partial<TCourse>) => {
   }
 
   const result = await CourseModel.findById(id).populate(
-    'preRequisitesCourses.course',
+    'preRequisiteCourses.course',
   );
 
   // const result = await CourseModel.findByIdAndUpdate(id, payload);
