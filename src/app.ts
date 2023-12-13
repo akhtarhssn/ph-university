@@ -22,7 +22,7 @@ app.get('/', (req: Request, res: Response) => {
 const testRoute = (req: Request, res: Response) => {
   Promise.reject();
   // const a = 10;
-  // res.send(a);
+  res.send(req.body);
 };
 
 app.get('/test', testRoute);

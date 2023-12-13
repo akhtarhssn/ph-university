@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import QueryBuilder from '../../builder/QueryBuilder';
 import { CourseSearchableFields } from './course.constant';
 import { TCourse } from './course.interface';
@@ -41,8 +43,38 @@ const updateCourse = async (id: string, payload: Partial<TCourse>) => {
     { new: true, runValidators: true },
   );
 
+  // check if there is any prerequisites update/
+  if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+    // filter out the deleted prerequisites
+    const deletedPreRequisites = preRequisiteCourses
+      .filter((el) => el?.course && el?.isDeleted)
+      .map((el) => el?.course);
+
+    const deletedPreRequisitesCourses = await CourseModel.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          preRequisiteCourses: { course: { $in: deletedPreRequisites } },
+        },
+      },
+    );
+
+    // filter out the new prerequisites
+    const newPreRequisites = preRequisiteCourses?.filter(
+      (el) => el.course && !el.isDeleted,
+    );
+
+    const newPreRequisitesCourses = await CourseModel.findByIdAndUpdate(id, {
+      $addToSet: { preRequisiteCourses: { $each: newPreRequisites } },
+    });
+  }
+
+  const result = await CourseModel.findById(id).populate(
+    'preRequisitesCourses.course',
+  );
+
   // const result = await CourseModel.findByIdAndUpdate(id, payload);
-  return updateBasicCourseInfo;
+  return result;
 };
 
 const deleteCourse = async (id: string) => {

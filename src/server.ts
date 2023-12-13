@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import app from './app';
 import config from './app/config';
 import mongoose from 'mongoose';

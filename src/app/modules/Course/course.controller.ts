@@ -44,7 +44,7 @@ const updateCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Department Updated Successfully',
+    message: 'Course Updated Successfully',
     data: result,
   });
 });
