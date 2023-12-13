@@ -15,6 +15,12 @@ router.get('/', CourseControllers.getAllCourses);
 
 router.get('/:courseId', CourseControllers.getSingleCourse);
 
+router.patch(
+  '/:courseId',
+  validateRequest(CourseZodValidation.UpdateCourseValidation),
+  CourseControllers.updateCourse,
+);
+
 router.patch('/:courseId', CourseControllers.deleteCourse);
 
-export const CourseRouter = router;
+export const CourseRoutes = router;
