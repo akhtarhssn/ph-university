@@ -87,8 +87,6 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
   //if password is not given , use deafult password
   userData.password = password || (config.default_password as string);
-
-  console.log(payload);
   //set student role
   userData.role = 'Faculty';
 

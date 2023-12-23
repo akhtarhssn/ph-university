@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Model, Types } from 'mongoose';
 
-export type TGender = 'male' | 'female' | 'other';
+export type TGender = 'Male' | 'Female';
 export type TBloodGroup =
   | 'A+'
   | 'A-'
@@ -18,6 +18,12 @@ export type TUserName = {
   lastName: string;
 };
 
+export interface IAddress {
+  street: string;
+  city: string;
+  postalCode: string;
+}
+
 export type TFaculty = {
   id: string;
   user: Types.ObjectId;
@@ -26,11 +32,11 @@ export type TFaculty = {
   gender: TGender;
   dateOfBirth?: Date;
   email: string;
-  contactNo: string;
-  emergencyContactNo: string;
+  phoneNumber: string;
+  emergencyPhoneNumber: string;
   bloodGroup?: TBloodGroup;
-  presentAddress: string;
-  permanentAddress: string;
+  presentAddress: IAddress;
+  permanentAddress: IAddress;
   profileImg?: string;
   academicDepartment: Types.ObjectId;
   isDeleted: boolean;

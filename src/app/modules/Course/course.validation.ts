@@ -33,7 +33,14 @@ const UpdateCourseValidation = z.object({
   }),
 });
 
+const AssignFacultiesValidation = z.object({
+  body: z.object({
+    faculties: z.array(z.string()),
+  }),
+});
+
 export const CourseZodValidation = {
   CreateCourseValidation,
   UpdateCourseValidation,
+  AssignFacultiesValidation,
 };
