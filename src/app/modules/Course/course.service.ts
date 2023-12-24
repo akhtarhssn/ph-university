@@ -134,6 +134,7 @@ const assignFaculties = async (id: string, payload: Partial<CourseFaculty>) => {
   const result = await CourseFacultyModel.findByIdAndUpdate(
     id,
     {
+      course: id,
       $addToSet: { faculties: { $each: payload } },
     },
     { upsert: true, new: true },
