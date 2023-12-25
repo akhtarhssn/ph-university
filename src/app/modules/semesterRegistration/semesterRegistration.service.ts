@@ -3,6 +3,7 @@ import { AppError } from '../../errors/AppError';
 import { SemesterModel } from '../academicSemester/academicSemester.model';
 import { ISemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistrationModel } from './semesterRegistration.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createSemesterRegistration = async (payload: ISemesterRegistration) => {
   const academicSemester = payload?.academicSemester;
@@ -24,14 +25,40 @@ const createSemesterRegistration = async (payload: ISemesterRegistration) => {
     if (isSemesterRegistrationExists) {
       throw new AppError(
         httpStatus.CONFLICT,
-        `${academicSemester} already exists`,
+        `Semester registered with ${academicSemester} already exists`,
       );
     }
   }
+
+  const result = await SemesterRegistrationModel.create(payload);
+  return result;
 };
-const getAllSemesterRegistration = async () => {};
-const getSingleSemesterRegistration = async () => {};
-const updateSemesterRegistration = async () => {};
+const getAllSemesterRegistration = async (payload: Record<string, unknown>) => {
+  const semesterRegistrationQuery = new QueryBuilder(
+    SemesterRegistrationModel.find().populate('academicSemester'),
+    payload,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await semesterRegistrationQuery.modelQuery;
+
+  return result;
+};
+const getSingleSemesterRegistration = async (id: string) => {
+  const result =
+    await SemesterRegistrationModel.findById(id).populate('academicSemester');
+
+  return result;
+};
+const updateSemesterRegistration = async (
+  id: string,
+  payload: Partial<ISemesterRegistration>,
+) => {
+  console.log(id, payload);
+};
 
 export const SemesterRegistrationServices = {
   createSemesterRegistration,
