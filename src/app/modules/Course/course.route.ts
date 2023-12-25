@@ -29,4 +29,10 @@ router.put(
   CourseControllers.assignFaculties,
 );
 
+router.delete(
+  '/:courseId/remove-faculties',
+  validateRequest(CourseZodValidation.AssignFacultiesValidation),
+  CourseControllers.removeFaculties,
+);
+
 export const CourseRoutes = router;
