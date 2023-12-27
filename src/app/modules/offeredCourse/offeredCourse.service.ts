@@ -16,6 +16,9 @@ const createOfferedCourse = async (payload: IOfferedCourse) => {
     course,
     section,
     faculty,
+    days,
+    startTime,
+    endTime,
   } = payload;
 
   // is semester registration exists
@@ -82,9 +85,16 @@ const createOfferedCourse = async (payload: IOfferedCourse) => {
   const assignedSchedules = await OfferedCourseModel.find({
     semesterRegistration,
     faculty,
+    days: { $in: days },
   }).select('days startTime endTime');
 
-  console.log(assignedSchedules);
+  const newSchedule = {
+    days,
+    startTime,
+    endTime,
+  };
+
+  assignedSchedules.forEach((schedule) => {});
 
   // const result = await OfferedCourseModel.create({
   //   ...payload,
