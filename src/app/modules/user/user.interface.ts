@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Model } from 'mongoose';
 
 export interface IUser {
@@ -11,6 +12,6 @@ export interface IUser {
 
 // Custom static methods:
 export interface UserModel extends Model<IUser> {
-  // eslint-disable-next-line no-unused-vars
   userExists(id: string): Promise<IUser | null>;
+  isPasswordMatched(plainPass: string, hashedPass: string): Promise<boolean>;
 }

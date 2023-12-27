@@ -37,6 +37,11 @@ UserSchema.statics.userExists = async (id: string) => {
   return existingUser;
 };
 
+// check if password matches:
+UserSchema.statics.isPasswordMatch = async (plainPass, hashedPass) => {
+  return await bcrypt.compare(plainPass, hashedPass);
+};
+
 // mongoose document middleware:
 // Pre save middleware: will work on create() and save()
 UserSchema.pre('save', async function (next) {
