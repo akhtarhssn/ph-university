@@ -62,7 +62,6 @@ export const findLastFacultyId = async () => {
 export const generateFacultyId = async () => {
   let currentId = (0).toString();
   const lastFacultyId = await findLastFacultyId();
-  console.log(lastFacultyId);
 
   if (lastFacultyId) {
     currentId = lastFacultyId.substring(2);
@@ -79,7 +78,7 @@ export const generateFacultyId = async () => {
 export const findLastAdminId = async () => {
   const lastAdmin = await User.findOne(
     {
-      role: 'admin',
+      role: 'Admin',
     },
     {
       id: 1,
