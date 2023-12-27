@@ -108,12 +108,12 @@ const createOfferedCourse = async (payload: IOfferedCourse) => {
     }
   });
 
-  // const result = await OfferedCourseModel.create({
-  //   ...payload,
-  //   academicSemester,
-  // });
+  const result = await OfferedCourseModel.create({
+    ...payload,
+    academicSemester,
+  });
 
-  // return result;
+  return result;
 };
 
 const getAllOfferedCourse = async () => {
