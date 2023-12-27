@@ -13,5 +13,5 @@ export interface IUser {
 // Custom static methods:
 export interface UserModel extends Model<IUser> {
   userExists(id: string): Promise<IUser | null>;
-  isPasswordMatched(plainPass: string, hashedPass: string): Promise<boolean>;
+  isPasswordMatch(plainPass: string, hashedPass: string): Promise<boolean>;
 }
