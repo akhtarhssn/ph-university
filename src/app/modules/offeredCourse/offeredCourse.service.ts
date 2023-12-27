@@ -99,6 +99,13 @@ const createOfferedCourse = async (payload: IOfferedCourse) => {
     const existingEndTime = new Date(`1970-01-01T${schedule.endTime}`);
     const newStartTime = new Date(`1970-01-01T${newSchedule.startTime}`);
     const newEndTime = new Date(`1970-01-01T${newSchedule.endTime}`);
+
+    if (newStartTime < existingEndTime && newEndTime > existingStartTime) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        `This faculty is not available at that time! Choose the other time or date.`,
+      );
+    }
   });
 
   // const result = await OfferedCourseModel.create({
