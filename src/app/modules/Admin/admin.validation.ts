@@ -7,6 +7,13 @@ const createUserNameValidationSchema = z.object({
   lastName: z.string().max(20),
 });
 
+// Define Zod schema for Address
+const createAddressZodSchema = z.object({
+  street: z.string().min(1),
+  city: z.string().min(1),
+  postalCode: z.string().min(1),
+});
+
 export const createAdminValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20),
@@ -16,11 +23,11 @@ export const createAdminValidationSchema = z.object({
       gender: z.enum([...Gender] as [string, ...string[]]),
       dateOfBirth: z.string().optional(),
       email: z.string().email(),
-      contactNo: z.string(),
-      emergencyContactNo: z.string(),
+      phoneNumber: z.string(),
+      emergencyPhoneNumber: z.string(),
       bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]),
-      presentAddress: z.string(),
-      permanentAddress: z.string(),
+      presentAddress: createAddressZodSchema,
+      permanentAddress: createAddressZodSchema,
       profileImg: z.string(),
     }),
   }),
@@ -32,6 +39,12 @@ const updateUserNameValidationSchema = z.object({
   lastName: z.string().min(3).max(20).optional(),
 });
 
+const updateAddressZodSchema = z.object({
+  street: z.string().min(1),
+  city: z.string().min(1),
+  postalCode: z.string().min(1),
+});
+
 export const updateAdminValidationSchema = z.object({
   body: z.object({
     admin: z.object({
@@ -40,11 +53,11 @@ export const updateAdminValidationSchema = z.object({
       gender: z.enum([...Gender] as [string, ...string[]]).optional(),
       dateOfBirth: z.string().optional(),
       email: z.string().email().optional(),
-      contactNo: z.string().optional(),
-      emergencyContactNo: z.string().optional(),
+      phoneNumber: z.string().optional(),
+      emergencyPhoneNumber: z.string().optional(),
       bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]).optional(),
-      presentAddress: z.string().optional(),
-      permanentAddress: z.string().optional(),
+      presentAddress: updateAddressZodSchema.optional(),
+      permanentAddress: updateAddressZodSchema.optional(),
       profileImg: z.string().optional(),
     }),
   }),

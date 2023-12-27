@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { BloodGroup, Gender } from './admin.constant';
-import { AdminModel, TAdmin, TUserName } from './admin.interface';
+import { AdminModel, IAddress, TAdmin, TUserName } from './admin.interface';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -18,6 +18,20 @@ const userNameSchema = new Schema<TUserName>({
     trim: true,
     required: [true, 'Last Name is required'],
     maxlength: [20, 'Name can not be more than 20 characters'],
+  },
+});
+
+const addressSchema = new Schema<IAddress>({
+  street: {
+    type: String,
+    required: [true, 'Street address is required'],
+    trim: true,
+  },
+  city: { type: String, required: [true, 'City name is required'], trim: true },
+  postalCode: {
+    type: String,
+    required: [true, 'Post code is required'],
+    trim: true,
   },
 });
 
@@ -56,8 +70,11 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
       required: [true, 'Email is required'],
       unique: true,
     },
-    contactNo: { type: String, required: [true, 'Contact number is required'] },
-    emergencyContactNo: {
+    phoneNumber: {
+      type: String,
+      required: [true, 'Contact number is required'],
+    },
+    emergencyPhoneNumber: {
       type: String,
       required: [true, 'Emergency contact number is required'],
     },
@@ -69,11 +86,11 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
       },
     },
     presentAddress: {
-      type: String,
+      type: addressSchema,
       required: [true, 'Present address is required'],
     },
     permanentAddress: {
-      type: String,
+      type: addressSchema,
       required: [true, 'Permanent address is required'],
     },
     profileImg: { type: String },
