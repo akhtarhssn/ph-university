@@ -11,8 +11,9 @@ const UserSchema = new Schema<IUser, UserModel>(
       required: true,
       unique: true,
     },
-    password: { type: String },
+    password: { type: String, required: true, select: 0 },
     needPasswordChange: { type: Boolean, required: true, default: true },
+    passwordChangedAt: { type: Date },
     role: {
       type: String,
       enum: ['Admin', 'Faculty', 'Student'],
@@ -33,7 +34,7 @@ const UserSchema = new Schema<IUser, UserModel>(
 
 // Custom static methods:
 UserSchema.statics.userExists = async (id: string) => {
-  const existingUser = await User.findOne({ id });
+  const existingUser = await User.findOne({ id }).select('+password');
   return existingUser;
 };
 
