@@ -1,11 +1,13 @@
+import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
+import config from '../../config';
 import { AppError } from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '../../config';
-import bcrypt from 'bcrypt';
 import { CreateToken } from './auth.utils';
+import jwt from 'jsonwebtoken';
+
 const loginUser = async (payload: ILoginUser) => {
   // check if the user exists
   // const isUserExist = await User.findOne({ id: payload?.id });
@@ -119,7 +121,60 @@ const changePassword = async (
   return null;
 };
 
+const refreshToken = async (token: string) => {
+  // validation
+  // checking if the given token is valid | verify the received token
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+
+  const { userId, iat } = decoded;
+  // user existence check:
+  const isUserExist = await User.userExists(userId);
+
+  const isDeleted = isUserExist?.isDeleted;
+  const status = isUserExist?.status;
+
+  if (!isUserExist || isDeleted === true || status === 'Blocked') {
+    throw new AppError(
+      !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
+      `${
+        (!isUserExist && 'User not found !') ||
+        (isDeleted && 'This user is deleted !!!') ||
+        'The user is blocked !!!'
+      }`,
+    );
+  }
+
+  // check if token issued expired:
+  if (
+    isUserExist.passwordChangedAt &&
+    User.JwtIssueBeforePassChange(isUserExist.passwordChangedAt, iat as number)
+  ) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'Login with your new password!!',
+    );
+  }
+
+  // create access token:
+  // create token and sent to the client
+  const jwtPayload = {
+    userId: isUserExist?.id,
+    role: isUserExist?.role,
+  };
+  const accessToken = CreateToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires as string,
+  );
+
+  return { accessToken };
+};
+
 export const AuthServices = {
   loginUser,
   changePassword,
+  refreshToken,
 };
