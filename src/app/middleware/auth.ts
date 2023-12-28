@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { TUserRole } from '../modules/user/user.interface';
+import { User } from '../modules/user/user.model';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -15,28 +16,54 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
     }
 
-    // verify the received token
-    jwt.verify(
+    // checking if the given token is valid | verify the received token
+    const decoded = jwt.verify(
       token,
       config.jwt_access_secret as string,
-      function (err, decoded) {
-        const role = (decoded as JwtPayload).role;
-        if (err) {
-          throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
-        }
+    ) as JwtPayload;
 
-        if (requiredRoles && !requiredRoles.includes(role)) {
-          throw new AppError(
-            httpStatus.UNAUTHORIZED,
-            'You are not authorized to create a student',
-          );
-        }
+    const { role, userId, iat } = decoded;
+    // user existence check:
+    const isUserExist = await User.userExists(userId);
 
-        // Decoded
-        req.user = decoded as JwtPayload;
-        next();
-      },
-    );
+    const isDeleted = isUserExist?.isDeleted;
+    const status = isUserExist?.status;
+
+    if (!isUserExist || isDeleted === true || status === 'Blocked') {
+      throw new AppError(
+        !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
+        `${
+          (!isUserExist && 'User not found !') ||
+          (isDeleted && 'This user is deleted !!!') ||
+          'The user is blocked !!!'
+        }`,
+      );
+    }
+
+    // check if token issued expired:
+    if (
+      isUserExist.passwordChangedAt &&
+      User.JwtIssueBeforePassChange(
+        isUserExist.passwordChangedAt,
+        iat as number,
+      )
+    ) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'Login with your new password!!',
+      );
+    }
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      // checking if user meets the required roles
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You are not authorized to create a student',
+      );
+    }
+
+    // Decoded
+    req.user = decoded as JwtPayload;
+    next();
   });
 };
 

@@ -5,6 +5,7 @@ import { ILoginUser } from './auth.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcrypt';
+import { CreateToken } from './auth.utils';
 const loginUser = async (payload: ILoginUser) => {
   // check if the user exists
   // const isUserExist = await User.findOne({ id: payload?.id });
@@ -15,7 +16,7 @@ const loginUser = async (payload: ILoginUser) => {
 
   if (!isUserExist || isDeleted === true || status === 'Blocked') {
     throw new AppError(
-      httpStatus.NOT_FOUND,
+      !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
       `${
         (!isUserExist && 'User not found !') ||
         (isDeleted && 'This user is deleted !!!') ||
@@ -42,13 +43,22 @@ const loginUser = async (payload: ILoginUser) => {
     userId: isUserExist?.id,
     role: isUserExist?.role,
   };
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: '10d',
-  });
+  const accessToken = CreateToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires as string,
+  );
+
+  const refreshToken = CreateToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires as string,
+  );
 
   // Access Granted: Send AccessToken, RefreshToken
   return {
     accessToken,
+    refreshToken,
     needPasswordChange: isUserExist?.needPasswordChange,
   };
 };

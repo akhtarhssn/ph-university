@@ -16,6 +16,10 @@ export interface IUser {
 export interface UserModel extends Model<IUser> {
   userExists(id: string): Promise<IUser | null>;
   isPasswordMatch(plainPass: string, hashedPass: string): Promise<boolean>;
+  JwtIssueBeforePassChange(
+    passwordChangedTimeStamp: Date,
+    jwtIssueTimeStamp: number,
+  ): boolean;
 }
 
 export type TUserRole = keyof typeof USER_ROLE;

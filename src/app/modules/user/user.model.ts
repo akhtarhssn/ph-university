@@ -79,5 +79,15 @@ UserSchema.post('save', function (doc, next) {
   next();
 });
 
+UserSchema.statics.JwtIssueBeforePassChange = function (
+  passwordChangedTimeStamp: Date,
+  jwtIssueTimeStamp: number,
+) {
+  const passwordChangeTime =
+    new Date(passwordChangedTimeStamp).getTime() / 1000;
+
+  return passwordChangeTime > jwtIssueTimeStamp;
+};
+
 // create model:
 export const User = model<IUser, UserModel>('User', UserSchema);
