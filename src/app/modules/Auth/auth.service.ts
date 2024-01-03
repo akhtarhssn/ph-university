@@ -7,6 +7,7 @@ import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
 import { CreateToken } from './auth.utils';
 import jwt from 'jsonwebtoken';
+import { sendMail } from '../../utils/sendMail';
 
 const loginUser = async (payload: ILoginUser) => {
   // check if the user exists
@@ -203,6 +204,8 @@ const forgetPassword = async (userId: string) => {
   );
 
   const resetUILink = `http://localhost:3000?id=${isUserExist?.id}&token=${resetToken}`;
+
+  sendMail(isUserExist?.email, resetUILink);
 };
 
 export const AuthServices = {
