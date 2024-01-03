@@ -5,6 +5,7 @@ import { USER_ROLE } from './user.constant';
 export interface IUser {
   id: string;
   password?: string;
+  email: string;
   needPasswordChange: boolean;
   passwordChangedAt?: Date;
   role: 'Admin' | 'Faculty' | 'Student';
