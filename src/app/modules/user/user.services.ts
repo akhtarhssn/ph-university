@@ -190,7 +190,16 @@ const getMe = async (payload: string) => {
   const decoded = verifyToken(payload, config.jwt_access_secret as string);
 
   const { userId, role } = decoded;
-  console.log(userId, role);
+  let result = null;
+  if (role === 'Admin') {
+    result = await Admin.findOne({ id: userId });
+  } else if (role === 'Faculty') {
+    result = await Faculty.findOne({ id: userId });
+  } else if (role === 'Student') {
+    result = await Student.findOne({ id: userId });
+  }
+
+  return result;
 };
 
 export const UserServices = {
