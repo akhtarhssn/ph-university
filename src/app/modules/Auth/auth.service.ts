@@ -3,11 +3,10 @@ import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import { AppError } from '../../errors/AppError';
+import { sendMail } from '../../utils/sendMail';
 import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
-import { CreateToken } from './auth.utils';
-import jwt from 'jsonwebtoken';
-import { sendMail } from '../../utils/sendMail';
+import { CreateToken, verifyToken } from './auth.utils';
 
 const loginUser = async (payload: ILoginUser) => {
   // check if the user exists
@@ -125,10 +124,7 @@ const changePassword = async (
 const refreshToken = async (token: string) => {
   // validation
   // checking if the given token is valid | verify the received token
-  const decoded = jwt.verify(
-    token,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const { userId, iat } = decoded;
   // user existence check:
@@ -228,6 +224,32 @@ const resetPassword = async (
       }`,
     );
   }
+
+  // checking if the given token is valid | verify the received token
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
+
+  // Throw error if payload id and token id doesn't match
+  if (decoded.userId !== payload?.id) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Access forbidden');
+  }
+
+  // hash the new password before updating
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_round),
+  );
+
+  await User.findOneAndUpdate(
+    {
+      id: decoded.userId,
+      role: decoded.role,
+    },
+    {
+      password: newHashedPassword,
+      needPasswordChange: false,
+      passwordChangedAt: new Date(),
+    },
+  );
 };
 
 export const AuthServices = {

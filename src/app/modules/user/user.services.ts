@@ -17,6 +17,7 @@ import { Admin } from '../Admin/admin.model';
 import { TFaculty } from '../Faculty/faculty.interface';
 import { DepartmentModel } from '../department/department.model';
 import { Faculty } from '../Faculty/faculty.model';
+import { verifyToken } from '../Auth/auth.utils';
 
 const createStudentIntoDB = async (password: string, payload: IStudent) => {
   // create a user object:
@@ -185,8 +186,16 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
+const getMe = async (payload: string) => {
+  const decoded = verifyToken(payload, config.jwt_access_secret as string);
+
+  const { userId, role } = decoded;
+  console.log(userId, role);
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMe,
 };
