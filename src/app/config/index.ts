@@ -15,4 +15,7 @@ export default {
   jwt_refresh_expires: process.env.JWT_REFRESH_EXPIRES_IN,
   smtp_pass: process.env.SMTP_PASS,
   mail_sender: process.env.MAIL_SENDER,
+  cloudinary_name: process.env.CLOUDINARY_NAME,
+  cloudinary_api: process.env.CLOUDINARY_API,
+  cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 };

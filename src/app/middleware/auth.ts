@@ -57,7 +57,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       // checking if user meets the required roles
       throw new AppError(
         httpStatus.UNAUTHORIZED,
-        'You are not authorized to create a student',
+        'You are not authorized to perform this action',
       );
     }
 

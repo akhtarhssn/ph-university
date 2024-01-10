@@ -21,8 +21,9 @@ const loginUser = async (payload: ILoginUser) => {
       !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
       `${
         (!isUserExist && 'User not found !') ||
-        (isDeleted && 'This user is deleted !!!') ||
-        'The user is blocked !!!'
+        (isDeleted &&
+          'You were deleted by admin. Contact admin for further help !!!') ||
+        'You are blocked by admin. Contact admin for further help !!!'
       }`,
     );
   }

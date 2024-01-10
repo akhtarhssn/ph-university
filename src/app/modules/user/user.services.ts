@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import config from '../../config';
 import { AppError } from '../../errors/AppError';
+import { Admin } from '../Admin/admin.model';
+import { TFaculty } from '../Faculty/faculty.interface';
+import { Faculty } from '../Faculty/faculty.model';
 import { SemesterModel } from '../academicSemester/academicSemester.model';
+import { DepartmentModel } from '../department/department.model';
 import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { IUser } from './user.interface';
@@ -12,12 +18,7 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
-import httpStatus from 'http-status';
-import { Admin } from '../Admin/admin.model';
-import { TFaculty } from '../Faculty/faculty.interface';
-import { DepartmentModel } from '../department/department.model';
-import { Faculty } from '../Faculty/faculty.model';
-import { verifyToken } from '../Auth/auth.utils';
+import { sendImageToCloudinary } from '../../utils/sendImageCloudinary';
 
 const createStudentIntoDB = async (password: string, payload: IStudent) => {
   // create a user object:
@@ -55,6 +56,9 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
     session.startTransaction();
     // set user id:
     userData.id = await generateStudentId(admissionSemester);
+
+    // send image to cloudinary
+    sendImageToCloudinary();
 
     // create a user
     const newUser = await User.create([userData], { session });
@@ -186,18 +190,22 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
-const getMe = async (payload: string) => {
-  const decoded = verifyToken(payload, config.jwt_access_secret as string);
-
-  const { userId, role } = decoded;
+const getMe = async (payload: JwtPayload) => {
+  const { userId, role } = payload;
   let result = null;
   if (role === 'Admin') {
-    result = await Admin.findOne({ id: userId });
+    result = await Admin.findOne({ id: userId }).populate('userId');
   } else if (role === 'Faculty') {
-    result = await Faculty.findOne({ id: userId });
+    result = await Faculty.findOne({ id: userId }).populate('userId');
   } else if (role === 'Student') {
-    result = await Student.findOne({ id: userId });
+    result = await Student.findOne({ id: userId }).populate('userId');
   }
+
+  return result;
+};
+
+const changeStatus = async (payload: { status: string }, id: string) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
 
   return result;
 };
@@ -207,4 +215,5 @@ export const UserServices = {
   createFacultyIntoDB,
   createAdminIntoDB,
   getMe,
+  changeStatus,
 };
