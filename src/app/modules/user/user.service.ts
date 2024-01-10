@@ -20,7 +20,11 @@ import {
 } from './user.utils';
 import { sendImageToCloudinary } from '../../utils/sendImageCloudinary';
 
-const createStudentIntoDB = async (password: string, payload: IStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: IStudent,
+) => {
   // create a user object:
   const userData: Partial<IUser> = {};
 
@@ -58,7 +62,7 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
     userData.id = await generateStudentId(admissionSemester);
 
     // send image to cloudinary
-    sendImageToCloudinary();
+    sendImageToCloudinary(file?.originalname, file?.path);
 
     // create a user
     const newUser = await User.create([userData], { session });
