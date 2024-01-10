@@ -62,7 +62,10 @@ const createStudentIntoDB = async (
     userData.id = await generateStudentId(admissionSemester);
 
     // send image to cloudinary
-    sendImageToCloudinary(file?.originalname, file?.path);
+    const { secure_url } = await sendImageToCloudinary(
+      file?.originalname,
+      file?.path,
+    );
 
     // create a user
     const newUser = await User.create([userData], { session });
@@ -74,6 +77,7 @@ const createStudentIntoDB = async (
     // set id, _id as user.
     payload.id = newUser[0].id;
     payload.userId = newUser[0]._id; // reference id
+    payload.profileImg = secure_url;
 
     const newStudent = await Student.create([payload], { session });
     if (!newStudent.length) {
