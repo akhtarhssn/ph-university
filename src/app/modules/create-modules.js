@@ -14,7 +14,7 @@ const extensions = [
 ];
 
 // Define the folder name
-const folder = 'Testing';
+const folder = 'EnrolledCourse';
 
 // Function to create files in a folder
 async function createFiles(folder) {
