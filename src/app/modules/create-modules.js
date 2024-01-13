@@ -21,7 +21,7 @@ async function createFiles(folder) {
   // Loop through each extension and create the corresponding file
   for (const extension of extensions) {
     await fs.writeFile(
-      path.join(__dirname, `${folder}/${folder.toLowerCase()}.${extension}`),
+      path.join(__dirname, `${folder}/${folder}.${extension}`),
       '',
     );
   }
