@@ -8,6 +8,7 @@ import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
 import { SemesterRegistrationModel } from '../semesterRegistration/semesterRegistration.model';
 import { CourseModel } from '../Course/course.model';
+import { Faculty } from '../Faculty/faculty.model';
 
 const createEnrolledCourse = async (
   userId: string,
@@ -154,7 +155,74 @@ const createEnrolledCourse = async (
   }
 };
 
-const updateEnrolledCourseMarks = async (userId: string, payload) => {};
+const updateEnrolledCourseMarks = async (
+  userId: string,
+  payload: Partial<IEnrolledCourse>,
+) => {
+  const { semesterRegistration, offeredCourse, student, courseMarks } = payload;
+
+  const isSemesterRegistrationExists = await SemesterRegistrationModel.findById(
+    semesterRegistration,
+    { _id: 1 },
+  );
+  const isOfferedCourseExists = await OfferedCourseModel.findById(
+    offeredCourse,
+    { _id: 1 },
+  );
+  const isStudentExists = await Student.findById(student, { _id: 1 });
+  const isFacultyExists = await Faculty.findOne({ id: userId }, { _id: 1 });
+
+  if (
+    !isSemesterRegistrationExists ||
+    !isOfferedCourseExists ||
+    !isStudentExists
+  ) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      !isSemesterRegistrationExists
+        ? 'Semester registration not found for marks update'
+        : !isOfferedCourseExists
+          ? 'Offered Course not found for enrollment !'
+          : !isStudentExists
+            ? 'Student not found for marks update'
+            : 'Faculty is not found for marks update',
+    );
+  }
+
+  const facultyAuthorization = await EnrolledCourse.findOne({
+    semesterRegistration,
+    offeredCourse,
+    student,
+    faculty: isFacultyExists?._id,
+  });
+
+  if (!facultyAuthorization) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "This faculty doesn't have the required permission to update this course marks",
+    );
+  }
+
+  const modifiedData: Record<string, unknown> = {
+    ...courseMarks,
+  };
+
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedData[`courseMarks.${key}`] = value;
+    }
+  }
+
+  const result = await EnrolledCourse.findByIdAndUpdate(
+    facultyAuthorization?._id,
+    modifiedData,
+    {
+      new: true,
+    },
+  );
+
+  return result;
+};
 
 export const EnrolledCourseServices = {
   createEnrolledCourse,
