@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import { SemesterRegistrationModel } from '../semesterRegistration/semesterRegistration.model';
 import { CourseModel } from '../Course/course.model';
 import { Faculty } from '../Faculty/faculty.model';
+import { calculateGradePoints } from './enrolledCourse.utils';
 
 const createEnrolledCourse = async (
   userId: string,
@@ -211,6 +212,24 @@ const updateEnrolledCourseMarks = async (
     for (const [key, value] of Object.entries(courseMarks)) {
       modifiedData[`courseMarks.${key}`] = value;
     }
+  }
+
+  // if course marks has final term
+  if (courseMarks?.finalTerm) {
+    const { classTest1, classTest2, midTerm, finalTerm } =
+      facultyAuthorization.courseMarks;
+
+    const totalMarks =
+      Math.ceil(classTest1 * 0.1) +
+      Math.ceil(midTerm * 0.3) +
+      Math.ceil(classTest2 * 0.1) +
+      Math.ceil(finalTerm * 0.5);
+
+    const result = calculateGradePoints(totalMarks);
+
+    modifiedData.grade = result.grade;
+    modifiedData.gradePoints = result.gradePoints;
+    modifiedData.isCompleted = true;
   }
 
   const result = await EnrolledCourse.findByIdAndUpdate(

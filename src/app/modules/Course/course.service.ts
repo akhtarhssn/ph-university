@@ -23,8 +23,12 @@ const getAllCourses = async (payload: Record<string, unknown>) => {
     .fields();
 
   const result = await courseQuery.modelQuery;
+  const meta = await courseQuery.countTotal();
 
-  return result;
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleCourse = async (id: string) => {
