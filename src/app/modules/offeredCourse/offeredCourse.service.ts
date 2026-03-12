@@ -6,9 +6,9 @@ import { OfferedCourseModel } from './offeredCourse.model';
 import { AcademicFacultyModel } from '../academicFaculty/academicFaculty.model';
 import { DepartmentModel } from '../department/department.model';
 import { CourseModel } from '../Course/course.model';
-import { Faculty } from '../Faculty/faculty.model';
 import { hasTimeConflict } from './offeredCourse.utils';
 import { SemesterRegisterStatus } from '../semesterRegistration/semesterRegistration.constants';
+import { Faculty } from '../faculty/faculty.model';
 
 const createOfferedCourse = async (payload: IOfferedCourse) => {
   const {

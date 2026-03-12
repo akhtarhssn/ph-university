@@ -5,8 +5,6 @@ import mongoose from 'mongoose';
 import config from '../../config';
 import { AppError } from '../../errors/AppError';
 import { Admin } from '../Admin/admin.model';
-import { TFaculty } from '../Faculty/faculty.interface';
-import { Faculty } from '../Faculty/faculty.model';
 import { SemesterModel } from '../academicSemester/academicSemester.model';
 import { DepartmentModel } from '../department/department.model';
 import { IStudent } from '../student/student.interface';
@@ -19,6 +17,8 @@ import {
   generateStudentId,
 } from './user.utils';
 import { sendImageToCloudinary } from '../../utils/sendImageCloudinary';
+import { TFaculty } from '../faculty/faculty.interface';
+import { Faculty } from '../faculty/faculty.model';
 
 const createStudentIntoDB = async (
   file: any,
@@ -62,10 +62,10 @@ const createStudentIntoDB = async (
     userData.id = await generateStudentId(admissionSemester);
 
     // send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(
+    const { secure_url } = (await sendImageToCloudinary(
       file?.originalname,
       file?.path,
-    );
+    )) as { secure_url: string };
 
     // create a user
     const newUser = await User.create([userData], { session });

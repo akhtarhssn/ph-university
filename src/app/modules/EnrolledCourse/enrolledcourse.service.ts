@@ -8,8 +8,9 @@ import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
 import { SemesterRegistrationModel } from '../semesterRegistration/semesterRegistration.model';
 import { CourseModel } from '../Course/course.model';
-import { Faculty } from '../Faculty/faculty.model';
+
 import { calculateGradePoints } from './enrolledCourse.utils';
+import { Faculty } from '../faculty/faculty.model';
 
 const createEnrolledCourse = async (
   userId: string,

@@ -3,11 +3,13 @@ import auth from '../../middleware/auth';
 import validateRequest from '../../middleware/validateRequest';
 import { upload } from '../../utils/sendImageCloudinary';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
-import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
+
 import { studentZodSchema } from '../student/student.validation';
 import { USER_ROLE } from './user.constant';
 import { UserController } from './user.controller';
 import { UserValidation } from './user.validation';
+import { createFacultyValidationSchema } from '../faculty/faculty.validation';
+
 
 const router = express.Router();
 
