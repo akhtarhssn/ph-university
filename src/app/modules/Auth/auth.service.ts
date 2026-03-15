@@ -19,11 +19,10 @@ const loginUser = async (payload: ILoginUser) => {
   if (!isUserExist || isDeleted === true || status === 'Blocked') {
     throw new AppError(
       !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
-      `${
-        (!isUserExist && 'User not found !') ||
-        (isDeleted &&
-          'You were deleted by admin. Contact admin for further help !!!') ||
-        'You are blocked by admin. Contact admin for further help !!!'
+      `${(!isUserExist && 'User not found !') ||
+      (isDeleted &&
+        'You were deleted by admin. Contact admin for further help !!!') ||
+      'You are blocked by admin. Contact admin for further help !!!'
       }`,
     );
   }
@@ -79,10 +78,9 @@ const changePassword = async (
   if (!isUserExist || isDeleted === true || status === 'Blocked') {
     throw new AppError(
       httpStatus.NOT_FOUND,
-      `${
-        (!isUserExist && 'User not found !') ||
-        (isDeleted && 'This user is deleted !!!') ||
-        'The user is blocked !!!'
+      `${(!isUserExist && 'User not found !') ||
+      (isDeleted && 'This user is deleted !!!') ||
+      'The user is blocked !!!'
       }`,
     );
   }
@@ -137,10 +135,9 @@ const refreshToken = async (token: string) => {
   if (!isUserExist || isDeleted === true || status === 'Blocked') {
     throw new AppError(
       !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
-      `${
-        (!isUserExist && 'User not found !') ||
-        (isDeleted && 'This user is deleted !!!') ||
-        'The user is blocked !!!'
+      `${(!isUserExist && 'User not found !') ||
+      (isDeleted && 'This user is deleted !!!') ||
+      'The user is blocked !!!'
       }`,
     );
   }
@@ -181,10 +178,9 @@ const forgetPassword = async (userId: string) => {
   if (!isUserExist || isDeleted === true || status === 'Blocked') {
     throw new AppError(
       !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
-      `${
-        (!isUserExist && 'User not found !') ||
-        (isDeleted && 'This user is deleted !!!') ||
-        'The user is blocked !!!'
+      `${(!isUserExist && 'User not found !') ||
+      (isDeleted && 'This user is deleted !!!') ||
+      'The user is blocked !!!'
       }`,
     );
   }
@@ -218,10 +214,9 @@ const resetPassword = async (
   if (!isUserExist || isDeleted === true || status === 'Blocked') {
     throw new AppError(
       !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
-      `${
-        (!isUserExist && 'User not found !') ||
-        (isDeleted && 'This user is deleted !!!') ||
-        'The user is blocked !!!'
+      `${(!isUserExist && 'User not found !') ||
+      (isDeleted && 'This user is deleted !!!') ||
+      'The user is blocked !!!'
       }`,
     );
   }
