@@ -1,3 +1,6 @@
+import dns from 'node:dns';
+dns.setServers(['8.8.8.8', '8.8.4.4']); // Force Google DNS for SRV resolution
+
 /* eslint-disable no-console */
 import app from './app';
 import config from './app/config';
@@ -8,7 +11,9 @@ let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(config.database_URL as string);
+    await mongoose.connect(config.database_URL as string, {
+      serverSelectionTimeoutMS: 5000, // Fall after 5 seconds instead of waiting indefinitely
+    });
 
     server = app.listen(config.port, () => {
       // eslint-disable-next-line no-console
@@ -30,8 +35,9 @@ process.on('unhandledRejection', () => {
     server.close(() => {
       process.exit(1);
     });
+  } else {
+    process.exit(1);
   }
-  process.exit(1);
 });
 
 process.on('uncaughtException', () => {

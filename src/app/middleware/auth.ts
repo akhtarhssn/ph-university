@@ -29,7 +29,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     const isDeleted = isUserExist?.isDeleted;
     const status = isUserExist?.status;
 
-    if (!isUserExist || isDeleted === true || status === 'Blocked') {
+    if (!isUserExist || isDeleted === true || status !== 'Active') {
       throw new AppError(
         !isUserExist ? httpStatus.NOT_FOUND : httpStatus.FORBIDDEN,
         `${
