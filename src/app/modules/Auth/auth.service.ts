@@ -174,7 +174,7 @@ const refreshToken = async (token: string) => {
 
 const forgetPassword = async (userId: string) => {
   // verify user before forget password
-  const user = await User.findById(userId);
+  const user = await User.userExists(userId);
 
   if (!user || user.isDeleted || user.status === 'Blocked') {
     // throw new AppError(
@@ -192,13 +192,15 @@ const forgetPassword = async (userId: string) => {
   }
 
   // Bump version → invalidates ALL previous reset tokens
-  await User.findByIdAndUpdate(user._id, {
-    $inc: { passwordResetVersion: 1 },
-    forgotPasswordTokenTime: new Date(),
-  });
+  await User.findOneAndUpdate(
+    { id: user.id },
+    {
+      $inc: { passwordResetVersion: 1 },
+    },
+  );
 
   // Re-fetch to get updated version (or calculate it)
-  const updatedUser = await User.findById(user._id).select(
+  const updatedUser = await User.findOneAndUpdate({ id: user.id }).select(
     'passwordResetVersion id role email',
   );
 
@@ -216,6 +218,7 @@ const forgetPassword = async (userId: string) => {
   );
 
   const resetUILink = `http://localhost:3000?id=${updatedUser?.id}&token=${resetToken}`;
+  console.log({ resetToken });
 
   sendMail(updatedUser!.email, {
     userName: updatedUser?.email.split('@')[0],
@@ -231,7 +234,7 @@ const resetPassword = async (
   const decoded = verifyToken(token, config.jwt_access_secret as Secret);
 
   // Throw error if payload id and token id doesn't match
-  if (decoded.userId !== payload?.id) {
+  if (payload?.id !== decoded.userId) {
     throw new AppError(httpStatus.FORBIDDEN, 'Access forbidden');
   }
 
@@ -252,8 +255,10 @@ const resetPassword = async (
     throw new AppError(httpStatus.FORBIDDEN, 'Invalid or expired reset link');
   }
 
+  console.log('Decoded Reset Version', decoded.resetVersion);
+
   // critical check
-  if (decoded.resetVersion !== user.passwordResetVersion) {
+  if (decoded.resetVersion - 1 !== user.passwordResetVersion) {
     throw new AppError(
       httpStatus.FORBIDDEN,
       'This reset link is no longer valid. Please request a new one.',
@@ -270,7 +275,7 @@ const resetPassword = async (
 
   // Update password
   await User.findOneAndUpdate(
-    { _id: user._id },
+    { id: decoded.userId, role: decoded.role },
     {
       password: newHashedPassword,
       needPasswordChange: false,
@@ -279,9 +284,12 @@ const resetPassword = async (
   );
 
   // Optional: bump version again (prevents any race-condition tokens)
-  await User.findByIdAndUpdate(user._id, {
-    $inc: { passwordResetVersion: 1 },
-  });
+  await User.findOneAndUpdate(
+    { id: user.id },
+    {
+      $inc: { passwordResetVersion: 1 },
+    },
+  );
 };
 
 export const AuthServices = {

@@ -15,7 +15,7 @@ const UserSchema = new Schema<IUser, UserModel>(
     email: { type: String, required: true, unique: true },
     needPasswordChange: { type: Boolean, required: true, default: true },
     passwordChangedAt: { type: Date },
-    forgotPasswordTokenTime: { type: Date },
+    // forgotPasswordTokenTime: { type: Date },
     passwordResetVersion: {
       type: Number,
       default: 0,

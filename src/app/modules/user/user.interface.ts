@@ -8,7 +8,7 @@ export interface IUser {
   email: string;
   needPasswordChange: boolean;
   passwordChangedAt?: Date;
-  forgotPasswordTokenTime?: Date;
+  // forgotPasswordTokenTime?: Date;
   passwordResetVersion?: number;
   role: 'Admin' | 'Faculty' | 'Student';
   status: 'Active' | 'Blocked';
