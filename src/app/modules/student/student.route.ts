@@ -1,6 +1,8 @@
 import express from 'express';
-import { StudentControllers } from './student.controller';
+import auth from '../../middleware/auth';
 import validateRequest from '../../middleware/validateRequest';
+import { USER_ROLE } from '../user/user.constant';
+import { StudentControllers } from './student.controller';
 import { studentZodSchema } from './student.validation';
 
 const router = express.Router();
@@ -9,7 +11,11 @@ const router = express.Router();
 router.get('/', StudentControllers.getStudents);
 
 // get single student
-router.get('/:id', StudentControllers.getStudent);
+router.get(
+  '/:id',
+  auth(USER_ROLE.Admin, USER_ROLE.Faculty),
+  StudentControllers.getStudent,
+);
 
 router.patch(
   '/:id',

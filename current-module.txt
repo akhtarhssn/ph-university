@@ -1,1 +1,1 @@
-19-5 Reset old password , hash it _ saved into DB
+19-7 Implement getMe functionality using own token

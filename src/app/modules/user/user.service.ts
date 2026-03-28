@@ -202,10 +202,12 @@ const getMe = async (payload: JwtPayload) => {
   const { userId, role } = payload;
   let result = null;
   if (role === 'Admin') {
-    result = await Admin.findOne({ id: userId }).populate('userId');
+    result = await Admin.findOne({ id: userId }).populate('user');
   } else if (role === 'Faculty') {
-    result = await Faculty.findOne({ id: userId }).populate('userId');
+    console.log({ role, userId });
+    result = await Faculty.findOne({ id: userId }).populate('user');
   } else if (role === 'Student') {
+    console.log({ role, userId });
     result = await Student.findOne({ id: userId }).populate('userId');
   }
 
