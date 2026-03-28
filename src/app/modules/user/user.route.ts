@@ -10,7 +10,6 @@ import { UserController } from './user.controller';
 import { UserValidation } from './user.validation';
 import { createFacultyValidationSchema } from '../faculty/faculty.validation';
 
-
 const router = express.Router();
 
 router.post(

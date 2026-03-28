@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
-import config from '../config';
+import multer from 'multer';
 import fs from 'fs';
+
+import config from '../config';
 
 cloudinary.config({
   cloud_name: config.cloudinary_name,
@@ -20,17 +21,16 @@ export const sendImageToCloudinary = (fileName: string, filePath: string) => {
           reject(error);
         }
         resolve(result);
+        // delete the file from local uploads folder after uploading to cloudinary
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('file is deleted successfully');
+          }
+        });
       },
     );
-
-    // delete a file asynchronously
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        console.log('file is deleted successfully');
-      }
-    });
   });
 };
 
@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
     cb(null, process.cwd() + '/uploads/');
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + '.' + file.mimetype.split('/')[1];
     cb(null, file.fieldname + '-' + uniqueSuffix);
   },
 });

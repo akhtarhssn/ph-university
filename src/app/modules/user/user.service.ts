@@ -2,6 +2,8 @@
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import { Express } from 'express';
+
 import config from '../../config';
 import { AppError } from '../../errors/AppError';
 import { Admin } from '../Admin/admin.model';
@@ -21,7 +23,7 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 
 const createStudentIntoDB = async (
-  file: any,
+  file: Express.Multer.File,
   password: string,
   payload: IStudent,
 ) => {
@@ -45,13 +47,16 @@ const createStudentIntoDB = async (
   }
 
   // check duplicate email:
-  // const duplicateEmail = await Student.findOne({ email: payload.email });
-  // if (duplicateEmail) {
-  //   throw new AppError(
-  //     409,
-  //     `An User with ${duplicateEmail.email} already exists`,
-  //   );
-  // }
+  const duplicateEmail = await Student.findOne({ email: payload.email });
+  const duplicatePhone = await Student.findOne({
+    phoneNumber: payload.phoneNumber,
+  });
+  if (duplicateEmail || duplicatePhone) {
+    throw new AppError(
+      409,
+      `An User with ${duplicateEmail ? 'email: ' + duplicateEmail.email : 'phone number: ' + duplicatePhone?.phoneNumber} already exists.`,
+    );
+  }
 
   // create/start a session
   const session = await mongoose.startSession();
@@ -61,12 +66,6 @@ const createStudentIntoDB = async (
     // set user id:
     userData.id = await generateStudentId(admissionSemester);
 
-    // send image to cloudinary
-    const { secure_url } = (await sendImageToCloudinary(
-      file?.originalname,
-      file?.path,
-    )) as { secure_url: string };
-
     // create a user
     const newUser = await User.create([userData], { session });
 
@@ -74,6 +73,13 @@ const createStudentIntoDB = async (
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create User');
     }
+
+    const imageName = `student-${userData.id}-${payload?.name.firstName}`;
+    // send image to cloudinary
+    const { secure_url } = (await sendImageToCloudinary(
+      imageName,
+      file?.path,
+    )) as { secure_url: string };
     // set id, _id as user.
     payload.id = newUser[0].id;
     payload.userId = newUser[0]._id; // reference id
